@@ -1,0 +1,31 @@
+name: rehan_school_app
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ">=2.17.0 <3.0.0"
+  flutter: ">=3.3.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^0.13.5
+  intl: ^0.17.0
+  image_picker: ^0.8.6
+  url_launcher: ^6.1.7
+  cupertino_icons: ^1.0.5
+  shared_preferences: ^2.0.15
+  collection: ^1.16.0
+  google_fonts: ^4.0.3  # Or the latest version
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.1  # Downgrade to work with Dart 2.18.6
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/school_logo.png
+    - assets/default_profile.png
