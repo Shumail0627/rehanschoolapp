@@ -10,19 +10,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.13.5
-  intl: ^0.17.0
-  image_picker: ^0.8.6
+  http: ^1.2.2
+  intl: ^0.19.0
+  image_picker: ^1.1.2
   url_launcher: ^6.1.7
   cupertino_icons: ^1.0.5
   shared_preferences: ^2.0.15
   collection: ^1.16.0
-  google_fonts: ^4.0.3  # Or the latest version
+  google_fonts: ^6.2.1  # Or the latest version
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.1  # Downgrade to work with Dart 2.18.6
+  flutter_lints: ^5.0.0  # Downgrade to work with Dart 2.18.6
 
 flutter:
   uses-material-design: true

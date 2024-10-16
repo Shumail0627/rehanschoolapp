@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 // Import other necessary screens here
 
 class DrawerMenu extends StatelessWidget {
-  const DrawerMenu({Key? key}) : super(key: key);
+  const DrawerMenu({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,7 @@ class DrawerMenu extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
-          DrawerHeader(
+          const DrawerHeader(
             decoration: BoxDecoration(
               color: Colors.blue,
             ),
@@ -25,8 +25,8 @@ class DrawerMenu extends StatelessWidget {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.dashboard),
-            title: Text('Dashboard'),
+            leading: const Icon(Icons.dashboard),
+            title: const Text('Dashboard'),
             onTap: () {
               Navigator.pop(context);
               // If not already on dashboard, navigate to it
@@ -34,8 +34,8 @@ class DrawerMenu extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.people),
-            title: Text('Users'),
+            leading: const Icon(Icons.people),
+            title: const Text('Users'),
             onTap: () {
               Navigator.pop(context);
               // Navigate to Users screen
@@ -43,8 +43,8 @@ class DrawerMenu extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.assignment),
-            title: Text('Assignments'),
+            leading: const Icon(Icons.assignment),
+            title: const Text('Assignments'),
             onTap: () {
               Navigator.pop(context);
               // Navigate to Assignments screen
@@ -52,8 +52,8 @@ class DrawerMenu extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.school),
-            title: Text('Students'),
+            leading: const Icon(Icons.school),
+            title: const Text('Students'),
             onTap: () {
               Navigator.pop(context);
               // Navigate to Students screen
@@ -61,8 +61,8 @@ class DrawerMenu extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.attach_money),
-            title: Text('Student Fees'),
+            leading: const Icon(Icons.attach_money),
+            title: const Text('Student Fees'),
             onTap: () {
               Navigator.pop(context);
               // Navigate to Student Fees screen
@@ -70,22 +70,22 @@ class DrawerMenu extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.exit_to_app),
-            title: Text('Logout'),
+            leading: const Icon(Icons.exit_to_app),
+            title: const Text('Logout'),
             onTap: () async {
               bool? confirm = await showDialog<bool>(
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text("Logout"),
-                    content: Text("Are you sure you want to logout?"),
+                    title: const Text("Logout"),
+                    content: const Text("Are you sure you want to logout?"),
                     actions: [
                       TextButton(
-                        child: Text("Cancel"),
+                        child: const Text("Cancel"),
                         onPressed: () => Navigator.of(context).pop(false),
                       ),
                       TextButton(
-                        child: Text("Logout"),
+                        child: const Text("Logout"),
                         onPressed: () => Navigator.of(context).pop(true),
                       ),
                     ],

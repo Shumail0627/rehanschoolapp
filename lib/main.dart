@@ -52,7 +52,7 @@ class MyApp extends StatelessWidget {
 }
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -136,36 +136,61 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  void _navigateToAppropriateScreen(String userId, String role, String campus) {
-    switch (role) {
-      case 'Admin':
+  void _navigateToAppropriateScreen(
+      String userId, String userRole, String userCampus) {
+    switch (userRole.toLowerCase()) {
+      case 'admin':
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const AdminDashboard()),
         );
         break;
-      case 'Student':
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => StudentDashboard(studentId: userId),
-          ),
-        );
-        break;
-      case 'Principal':
+      case 'principal':
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => PrincipalDashboard(
               principalId: userId,
-              campus: campus,
+              campus: userCampus,
+            ),
+          ),
+        );
+        break;
+      case 'vice-principal':
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VicePrincipalDashboard(
+              vicePrincipalId: userId,
+              campus: userCampus,
+            ),
+          ),
+        );
+        break;
+      case 'teacher':
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TeacherDashboard(
+              teacherId: userId,
+              campus: userCampus,
+            ),
+          ),
+        );
+        break;
+      case 'student':
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => StudentDashboard(
+              studentId: userId,
             ),
           ),
         );
         break;
       default:
         setState(() {
-          _errorMessage = 'Unknown user role: $role';
+          _errorMessage = 'Unknown user role: $userRole';
         });
     }
   }
@@ -189,14 +214,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     bottomRight: Radius.circular(80),
                   ),
                 ),
-                child: Stack(
+                child: const Stack(
                   children: [
                     Positioned(
                       top: 60,
                       left: 20,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
+                        children: [
                           Text(
                             'Rehan',
                             style: TextStyle(
@@ -307,7 +332,7 @@ class _LoginScreenState extends State<LoginScreen> {
 }
 
 class AdminDashboard extends StatefulWidget {
-  const AdminDashboard({Key? key}) : super(key: key);
+  const AdminDashboard({super.key});
 
   @override
   _AdminDashboardState createState() => _AdminDashboardState();
@@ -395,7 +420,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => AddUserScreen(
+                                    builder: (context) => const AddUserScreen(
                                         campus: '', isStudent: false)),
                               );
                             },
@@ -483,7 +508,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AllUsersScreen(userType: 'Student'),
+                      builder: (context) =>
+                          const AllUsersScreen(userType: 'Student'),
                     ),
                   );
                 }),
@@ -493,7 +519,8 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => AllUsersScreen(userType: 'Teacher'),
+                      builder: (context) =>
+                          const AllUsersScreen(userType: 'Teacher'),
                     ),
                   );
                 }),
@@ -505,7 +532,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                     context,
                     MaterialPageRoute(
                       builder: (context) =>
-                          AllUsersScreen(userType: 'Principal'),
+                          const AllUsersScreen(userType: 'Principal'),
                     ),
                   );
                 }),
@@ -723,7 +750,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
 class AllUsersScreen extends StatefulWidget {
   final String userType;
 
-  const AllUsersScreen({Key? key, required this.userType}) : super(key: key);
+  const AllUsersScreen({super.key, required this.userType});
 
   @override
   _AllUsersScreenState createState() => _AllUsersScreenState();
@@ -784,8 +811,12 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
         displayedUsers = users
             .where((user) =>
                 user['name'].toLowerCase().contains(query.toLowerCase()) ||
-                (user['roll_no'] ?? '').toLowerCase().contains(query.toLowerCase()) ||
-                (user['email'] ?? '').toLowerCase().contains(query.toLowerCase()))
+                (user['roll_no'] ?? '')
+                    .toLowerCase()
+                    .contains(query.toLowerCase()) ||
+                (user['email'] ?? '')
+                    .toLowerCase()
+                    .contains(query.toLowerCase()))
             .toList();
       }
     });
@@ -805,7 +836,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        iconTheme: IconThemeData(color: Colors.black),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -819,7 +850,8 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                         onChanged: filterUsers,
                         decoration: InputDecoration(
                           hintText: 'Search ${widget.userType}s',
-                          prefixIcon: Icon(Icons.search, color: Colors.blue),
+                          prefixIcon:
+                              const Icon(Icons.search, color: Colors.blue),
                           filled: true,
                           fillColor: Colors.white,
                           border: OutlineInputBorder(
@@ -835,13 +867,14 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                         itemBuilder: (context, index) {
                           final user = displayedUsers[index];
                           return Card(
-                            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
                             elevation: 2,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
                             child: ListTile(
-                              contentPadding: EdgeInsets.all(16),
+                              contentPadding: const EdgeInsets.all(16),
                               leading: CircleAvatar(
                                 radius: 30,
                                 backgroundImage: user['picture_path'] != null
@@ -851,7 +884,9 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                                 child: user['picture_path'] == null
                                     ? Text(
                                         user['name'][0].toUpperCase(),
-                                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                                        style: const TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.bold),
                                       )
                                     : null,
                               ),
@@ -869,7 +904,7 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                                     user['roll_no'] ?? user['email'] ?? 'N/A',
                                     style: GoogleFonts.poppins(fontSize: 14),
                                   ),
-                                  SizedBox(height: 4),
+                                  const SizedBox(height: 4),
                                   Text(
                                     user['campus'] ?? 'N/A',
                                     style: GoogleFonts.poppins(
@@ -879,13 +914,16 @@ class _AllUsersScreenState extends State<AllUsersScreen> {
                                   ),
                                 ],
                               ),
-                              trailing: Icon(Icons.arrow_forward_ios, color: Colors.blue),
+                              trailing: const Icon(Icons.arrow_forward_ios,
+                                  color: Colors.blue),
                               onTap: () {
                                 // Handle user tap, e.g., navigate to user details
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => UserDetailsScreen(userId: user['id'], userType: user['user_type']),
+                                    builder: (context) => UserDetailsScreen(
+                                        userId: user['id'],
+                                        userType: user['user_type']),
                                   ),
                                 );
                               },
@@ -905,10 +943,10 @@ class UserDetailsScreen extends StatefulWidget {
   final String userType;
 
   const UserDetailsScreen({
-    Key? key,
+    super.key,
     required this.userId,
     required this.userType,
-  }) : super(key: key);
+  });
 
   @override
   _UserDetailsScreenState createState() => _UserDetailsScreenState();
@@ -1025,7 +1063,8 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
           TextButton(
             child: const Text('Save'),
             onPressed: () {
-              updateUserField(field.toLowerCase().replaceAll(' ', '_'), newValue);
+              updateUserField(
+                  field.toLowerCase().replaceAll(' ', '_'), newValue);
               Navigator.pop(context);
             },
           ),
@@ -1087,24 +1126,35 @@ class _UserDetailsScreenState extends State<UserDetailsScreen> {
                       _buildDetailRow('Phone', userData['phone'] ?? 'N/A'),
                       _buildDetailRow('Campus', userData['campus'] ?? 'N/A'),
                       if (widget.userType == 'Student') ...[
-                        _buildDetailRow('Roll Number', userData['roll_no'] ?? 'N/A'),
+                        _buildDetailRow(
+                            'Roll Number', userData['roll_no'] ?? 'N/A'),
                         _buildDetailRow('Class', userData['class'] ?? 'N/A'),
-                        _buildDetailRow('Father\'s Name', userData['father_name'] ?? 'N/A'),
-                        _buildDetailRow('Mother\'s Name', userData['mother_name'] ?? 'N/A'),
+                        _buildDetailRow(
+                            'Father\'s Name', userData['father_name'] ?? 'N/A'),
+                        _buildDetailRow(
+                            'Mother\'s Name', userData['mother_name'] ?? 'N/A'),
                       ],
                       if (widget.userType == 'Teacher') ...[
-                        _buildDetailRow('Subject', userData['subject'] ?? 'N/A'),
+                        _buildDetailRow(
+                            'Subject', userData['subject'] ?? 'N/A'),
                       ],
-                      _buildDetailRow('Date of Birth', userData['dob'] ?? 'N/A'),
-                      _buildDetailRow('Date of Joining', userData['doj'] ?? 'N/A'),
-                      _buildDetailRow('WhatsApp Number', userData['whatsapp'] ?? 'N/A'),
+                      _buildDetailRow(
+                          'Date of Birth', userData['dob'] ?? 'N/A'),
+                      _buildDetailRow(
+                          'Date of Joining', userData['doj'] ?? 'N/A'),
+                      _buildDetailRow(
+                          'WhatsApp Number', userData['whatsapp'] ?? 'N/A'),
                       _buildDetailRow('City', userData['city'] ?? 'N/A'),
                       _buildDetailRow('Country', userData['country'] ?? 'N/A'),
                       if (widget.userType == 'Student') ...[
-                        _buildDetailRow('Reason for Joining', userData['reason_for_joining'] ?? 'N/A'),
-                        _buildDetailRow('Favorite Food', userData['favorite_food'] ?? 'N/A'),
-                        _buildDetailRow('Biggest Wish', userData['biggest_wish'] ?? 'N/A'),
-                        _buildDetailRow('Vision for 10 Years', userData['vision_10_years'] ?? 'N/A'),
+                        _buildDetailRow('Reason for Joining',
+                            userData['reason_for_joining'] ?? 'N/A'),
+                        _buildDetailRow('Favorite Food',
+                            userData['favorite_food'] ?? 'N/A'),
+                        _buildDetailRow(
+                            'Biggest Wish', userData['biggest_wish'] ?? 'N/A'),
+                        _buildDetailRow('Vision for 10 Years',
+                            userData['vision_10_years'] ?? 'N/A'),
                       ],
                     ],
                   ),
@@ -1119,11 +1169,11 @@ class EditUserScreen extends StatefulWidget {
   final Map<String, dynamic> userData;
 
   const EditUserScreen({
-    Key? key,
+    super.key,
     required this.userId,
     required this.userType,
     required this.userData,
-  }) : super(key: key);
+  });
 
   @override
   _EditUserScreenState createState() => _EditUserScreenState();
@@ -1236,8 +1286,6 @@ class _EditUserScreenState extends State<EditUserScreen> {
   }
 }
 
-
-
 enum AssignmentStatus { Pending, Completed, Submitted }
 
 class DailyAssignment {
@@ -1277,8 +1325,7 @@ class DailyAssignment {
 class AssignmentsScreen extends StatefulWidget {
   final String studentId;
 
-  const AssignmentsScreen({Key? key, required this.studentId})
-      : super(key: key);
+  const AssignmentsScreen({super.key, required this.studentId});
 
   @override
   _AssignmentsScreenState createState() => _AssignmentsScreenState();
@@ -1371,7 +1418,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
         final data = json.decode(response.body);
         if (data['status'] == 'success') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Assignment submitted successfully')),
+            const SnackBar(content: Text('Assignment submitted successfully')),
           );
           await fetchAssignments();
         } else {
@@ -1392,7 +1439,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Daily Assignments'),
+        title: const Text('Daily Assignments'),
       ),
       body: Column(
         children: [
@@ -1413,7 +1460,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
           Expanded(
             child: Text(
               'Date: ${DateFormat('yyyy-MM-dd').format(selectedDate)}',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
           ElevatedButton(
@@ -1431,7 +1478,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
                 fetchAssignments();
               }
             },
-            child: Text('Select Date'),
+            child: const Text('Select Date'),
           ),
         ],
       ),
@@ -1440,13 +1487,13 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
 
   Widget _buildAssignmentsList() {
     if (isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator());
     }
     if (errorMessage.isNotEmpty) {
       return Center(child: Text(errorMessage));
     }
     if (assignments.isEmpty) {
-      return Center(child: Text('No assignments for this date'));
+      return const Center(child: Text('No assignments for this date'));
     }
     return ListView.builder(
       itemCount: assignments.length,
@@ -1458,7 +1505,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
 
   Widget _buildAssignmentCard(DailyAssignment assignment) {
     return Card(
-      margin: EdgeInsets.all(8),
+      margin: const EdgeInsets.all(8),
       child: ListTile(
         title: Text(assignment.name),
         subtitle: Column(
@@ -1476,18 +1523,18 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
 
   Widget _buildAssignmentAction(DailyAssignment assignment) {
     if (assignment.status == AssignmentStatus.Completed) {
-      return Icon(Icons.check_circle, color: Colors.green);
+      return const Icon(Icons.check_circle, color: Colors.green);
     }
     if (assignment.name.toLowerCase() == 'yoga' ||
         assignment.name.toLowerCase() == 'meditation') {
       return ElevatedButton(
         onPressed: () => _markAsCompleted(assignment),
-        child: Text('Mark Complete'),
+        child: const Text('Mark Complete'),
       );
     }
     return ElevatedButton(
       onPressed: () => _showSubmitDialog(assignment),
-      child: Text('Submit'),
+      child: const Text('Submit'),
     );
   }
 
@@ -1497,12 +1544,12 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Activity Completed'),
+          title: const Text('Activity Completed'),
           content:
               Text('Great job completing your ${assignment.name} activity!'),
           actions: [
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
                 fetchAssignments();
@@ -1520,25 +1567,26 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Submit Assignment'),
+          title: const Text('Submit Assignment'),
           content: TextField(
-            decoration: InputDecoration(labelText: 'Submission Link'),
+            decoration: const InputDecoration(labelText: 'Submission Link'),
             onChanged: (value) => link = value,
           ),
           actions: [
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () => Navigator.pop(context),
             ),
             TextButton(
-              child: Text('Submit'),
+              child: const Text('Submit'),
               onPressed: () {
                 if (link.isNotEmpty) {
                   submitAssignment(assignment.id, link);
                   Navigator.pop(context);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Please enter a submission link')),
+                    const SnackBar(
+                        content: Text('Please enter a submission link')),
                   );
                 }
               },
@@ -1553,7 +1601,7 @@ class _AssignmentsScreenState extends State<AssignmentsScreen> {
 class StudentDashboard extends StatefulWidget {
   final String studentId;
 
-  const StudentDashboard({Key? key, required this.studentId}) : super(key: key);
+  const StudentDashboard({super.key, required this.studentId});
 
   @override
   _StudentDashboardState createState() => _StudentDashboardState();
@@ -1809,7 +1857,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                primary: Colors.blue,
+                backgroundColor: Colors.blue,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30)),
                 padding:
@@ -1960,10 +2008,10 @@ class StudentDetailsScreen extends StatefulWidget {
   final bool isPrincipal;
 
   const StudentDetailsScreen({
-    Key? key,
+    super.key,
     required this.studentId,
     this.isPrincipal = false,
-  }) : super(key: key);
+  });
 
   @override
   _StudentDetailsScreenState createState() => _StudentDetailsScreenState();
@@ -2136,6 +2184,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                       delegate: SliverChildListDelegate([
                         _buildInfoSection('Personal Information', [
                           _buildInfoItem('Age', studentData['age']),
+                          _buildInfoItem('Email', studentData['gmail']),
                           _buildInfoItem('Date of Birth', studentData['dob']),
                           _buildInfoItem('Date of Joining', studentData['doj']),
                           _buildInfoItem('Class', studentData['class']),
@@ -2421,15 +2470,15 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
 
   Widget _buildSocialLinks() {
     return Card(
-      margin: EdgeInsets.all(16),
+      margin: const EdgeInsets.all(16),
       child: Padding(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Social Links',
+            const Text('Social Links',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -2443,10 +2492,10 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
                     studentData['instagram_link']),
               ],
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: _showEditSocialLinksDialog,
-              child: Text('Update Social Links'),
+              child: const Text('Update Social Links'),
             ),
           ],
         ),
@@ -2460,7 +2509,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
       child: Row(
         children: [
           Icon(icon, color: Colors.blue),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Expanded(
             child: Text(
               link ?? 'Not provided',
@@ -2512,7 +2561,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Edit Social Links'),
+        title: const Text('Edit Social Links'),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -2526,11 +2575,11 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
         ),
         actions: [
           TextButton(
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
             onPressed: () => Navigator.of(context).pop(),
           ),
           TextButton(
-            child: Text('Save'),
+            child: const Text('Save'),
             onPressed: () {
               _updateSocialLinks(controllers);
               Navigator.of(context).pop();
@@ -2565,7 +2614,7 @@ class _StudentDetailsScreenState extends State<StudentDetailsScreen> {
             studentData['instagram_link'] = controllers['instagram']!.text;
           });
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Social links updated successfully')),
+            const SnackBar(content: Text('Social links updated successfully')),
           );
         } else {
           throw Exception(result['message']);
@@ -2978,7 +3027,7 @@ class _CampusDetailsScreenState extends State<CampusDetailsScreen> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15)),
                             child: ListTile(
-                              contentPadding: EdgeInsets.all(16),
+                              contentPadding: const EdgeInsets.all(16),
                               leading: CircleAvatar(
                                 radius: 30,
                                 backgroundImage: student['picture_path'] !=
@@ -2986,7 +3035,8 @@ class _CampusDetailsScreenState extends State<CampusDetailsScreen> {
                                         student['picture_path'].isNotEmpty
                                     ? NetworkImage(
                                         'http://school.superteclabs.com/${student['picture_path']}')
-                                    : AssetImage('assets/default_profile.png')
+                                    : const AssetImage(
+                                            'assets/default_profile.png')
                                         as ImageProvider,
                                 onBackgroundImageError:
                                     (exception, stackTrace) {
@@ -3001,15 +3051,15 @@ class _CampusDetailsScreenState extends State<CampusDetailsScreen> {
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  SizedBox(height: 4),
+                                  const SizedBox(height: 4),
                                   Text(
                                     student['gmail'] ?? 'No email',
                                     style: GoogleFonts.poppins(
                                         fontSize: 14, color: Colors.grey[600]),
                                   ),
-                                  SizedBox(height: 8),
+                                  const SizedBox(height: 8),
                                   Container(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                         horizontal: 10, vertical: 5),
                                     decoration: BoxDecoration(
                                       color: student['status'] == 'Active'
@@ -3025,7 +3075,7 @@ class _CampusDetailsScreenState extends State<CampusDetailsScreen> {
                                   ),
                                 ],
                               ),
-                              trailing: Icon(Icons.arrow_forward_ios,
+                              trailing: const Icon(Icons.arrow_forward_ios,
                                   color: Colors.blue),
                               onTap: () {
                                 Navigator.push(
@@ -3333,11 +3383,12 @@ class _PrincipalDashboardState extends State<PrincipalDashboard> {
                 ),
                 Container(
                   padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Colors.blue,
                     shape: BoxShape.circle,
                   ),
-                  child: Icon(Icons.camera_alt, color: Colors.white, size: 20),
+                  child: const Icon(Icons.camera_alt,
+                      color: Colors.white, size: 20),
                 ),
               ],
             ),
@@ -3365,8 +3416,8 @@ class _PrincipalDashboardState extends State<PrincipalDashboard> {
   }
 
   Future<void> _updateProfilePicture() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
       try {
@@ -3390,7 +3441,8 @@ class _PrincipalDashboardState extends State<PrincipalDashboard> {
           var jsonResponse = json.decode(responseBody);
           if (jsonResponse['status'] == 'success') {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Profile picture updated successfully')),
+              const SnackBar(
+                  content: Text('Profile picture updated successfully')),
             );
             fetchDashboardData(); // Refresh data to show new picture
           } else {
@@ -3560,15 +3612,15 @@ class _PrincipalDashboardState extends State<PrincipalDashboard> {
           maxChildSize: 0.95,
           builder: (_, controller) {
             return Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
               ),
               child: Column(
                 children: [
                   Container(
-                    padding: EdgeInsets.symmetric(vertical: 12),
-                    decoration: BoxDecoration(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: const BoxDecoration(
                       color: Colors.blue,
                       borderRadius:
                           BorderRadius.vertical(top: Radius.circular(20)),
@@ -3577,7 +3629,7 @@ class _PrincipalDashboardState extends State<PrincipalDashboard> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(left: 20),
+                          padding: const EdgeInsets.only(left: 20),
                           child: Text(
                             'All Students',
                             style: GoogleFonts.poppins(
@@ -3588,7 +3640,7 @@ class _PrincipalDashboardState extends State<PrincipalDashboard> {
                           ),
                         ),
                         IconButton(
-                          icon: Icon(Icons.close, color: Colors.white),
+                          icon: const Icon(Icons.close, color: Colors.white),
                           onPressed: () => Navigator.pop(context),
                         ),
                       ],
@@ -3600,7 +3652,8 @@ class _PrincipalDashboardState extends State<PrincipalDashboard> {
                       onChanged: filterStudents,
                       decoration: InputDecoration(
                         hintText: 'Search students',
-                        prefixIcon: Icon(Icons.search, color: Colors.blue),
+                        prefixIcon:
+                            const Icon(Icons.search, color: Colors.blue),
                         filled: true,
                         fillColor: Colors.grey[200],
                         border: OutlineInputBorder(
@@ -3618,8 +3671,8 @@ class _PrincipalDashboardState extends State<PrincipalDashboard> {
                         final student = displayedStudents[index];
                         return Card(
                           elevation: 2,
-                          margin:
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
@@ -3628,7 +3681,8 @@ class _PrincipalDashboardState extends State<PrincipalDashboard> {
                               backgroundImage: student.profilePicture.isNotEmpty
                                   ? NetworkImage(
                                       'http://school.superteclabs.com/${student.profilePicture}')
-                                  : AssetImage('assets/default_profile.png')
+                                  : const AssetImage(
+                                          'assets/default_profile.png')
                                       as ImageProvider,
                               radius: 25,
                             ),
@@ -3646,7 +3700,7 @@ class _PrincipalDashboardState extends State<PrincipalDashboard> {
                                 color: Colors.grey[600],
                               ),
                             ),
-                            trailing: Icon(Icons.arrow_forward_ios,
+                            trailing: const Icon(Icons.arrow_forward_ios,
                                 color: Colors.blue),
                             onTap: () {
                               Navigator.push(
@@ -3747,10 +3801,10 @@ class AddUserScreen extends StatefulWidget {
   final bool isStudent;
 
   const AddUserScreen({
-    Key? key,
+    super.key,
     required this.campus,
     required this.isStudent,
-  }) : super(key: key);
+  });
 
   @override
   _AddUserScreenState createState() => _AddUserScreenState();
@@ -3764,8 +3818,8 @@ class _AddUserScreenState extends State<AddUserScreen> {
   String _selectedRole = 'Student';
   String _selectedCampus = 'Korangi';
 
-  List<String> _roles = ['Teacher', 'Student', 'Principal', 'Admin'];
-  List<String> _campuses = ['Korangi', 'Munawwar', 'Islamabad', 'Online'];
+  final List<String> _roles = ['Teacher', 'Student', 'Principal', 'Admin'];
+  final List<String> _campuses = ['Korangi', 'Munawwar', 'Islamabad', 'Online'];
 
   @override
   void initState() {
@@ -3867,7 +3921,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                     radius: 50,
                     backgroundImage: _image != null ? FileImage(_image!) : null,
                     child: _image == null
-                        ? Icon(Icons.add_a_photo, size: 40)
+                        ? const Icon(Icons.add_a_photo, size: 40)
                         : null,
                   ),
                 ),
@@ -3897,7 +3951,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                       borderRadius: BorderRadius.circular(10)),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 value: _selectedRole,
                 items: _roles.map((String role) {
@@ -3919,7 +3973,7 @@ class _AddUserScreenState extends State<AddUserScreen> {
                       borderRadius: BorderRadius.circular(10)),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 value: _selectedCampus,
                 items: _campuses.map((String campus) {
@@ -4135,11 +4189,11 @@ class MarkBulkAttendanceScreen extends StatefulWidget {
   final Function refreshDashboard; // Add this line
 
   const MarkBulkAttendanceScreen({
-    Key? key,
+    super.key,
     required this.students,
     required this.campus,
     required this.refreshDashboard, // Add this line
-  }) : super(key: key);
+  });
 
   @override
   _MarkBulkAttendanceScreenState createState() =>
@@ -4230,8 +4284,8 @@ class _MarkBulkAttendanceScreenState extends State<MarkBulkAttendanceScreen> {
         child: Column(
           children: [
             Container(
-              padding: EdgeInsets.all(16),
-              margin: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
+              margin: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(15),
@@ -4240,7 +4294,7 @@ class _MarkBulkAttendanceScreenState extends State<MarkBulkAttendanceScreen> {
                     color: Colors.blue.withOpacity(0.1),
                     spreadRadius: 2,
                     blurRadius: 8,
-                    offset: Offset(0, 4),
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
@@ -4254,7 +4308,7 @@ class _MarkBulkAttendanceScreenState extends State<MarkBulkAttendanceScreen> {
                       style: GoogleFonts.poppins(
                           fontSize: 16, fontWeight: FontWeight.w500),
                     ),
-                    Icon(Icons.calendar_today, color: Colors.blue),
+                    const Icon(Icons.calendar_today, color: Colors.blue),
                   ],
                 ),
               ),
@@ -4266,7 +4320,8 @@ class _MarkBulkAttendanceScreenState extends State<MarkBulkAttendanceScreen> {
                   final student = widget.students[index];
                   return Card(
                     elevation: 2,
-                    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15)),
                     child: CheckboxListTile(
@@ -4285,7 +4340,7 @@ class _MarkBulkAttendanceScreenState extends State<MarkBulkAttendanceScreen> {
                         backgroundColor: Colors.blue.shade100,
                         child: Text(
                           student.name.substring(0, 1).toUpperCase(),
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.blue, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -4296,18 +4351,19 @@ class _MarkBulkAttendanceScreenState extends State<MarkBulkAttendanceScreen> {
               ),
             ),
             Container(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: ElevatedButton(
                 onPressed: _submitAttendance,
-                child: Text('Submit Attendance',
-                    style: GoogleFonts.poppins(fontSize: 16)),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.blue,
+                  backgroundColor: Colors.blue,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30)),
-                  padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                   elevation: 5,
                 ),
+                child: Text('Submit Attendance',
+                    style: GoogleFonts.poppins(fontSize: 16)),
               ),
             ),
           ],
@@ -4348,7 +4404,7 @@ class ManageFeesScreen extends StatelessWidget {
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Search students...',
-                  prefixIcon: Icon(Icons.search, color: Colors.blue),
+                  prefixIcon: const Icon(Icons.search, color: Colors.blue),
                   filled: true,
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
@@ -4362,7 +4418,7 @@ class ManageFeesScreen extends StatelessWidget {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide(color: Colors.blue, width: 2),
+                    borderSide: const BorderSide(color: Colors.blue, width: 2),
                   ),
                 ),
               ),
@@ -4374,17 +4430,18 @@ class ManageFeesScreen extends StatelessWidget {
                   final student = students[index];
                   return Card(
                     elevation: 2,
-                    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    margin:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15)),
                     child: ListTile(
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
                       leading: CircleAvatar(
                         backgroundColor: Colors.blue.shade100,
                         child: Text(
                           student.name.substring(0, 1).toUpperCase(),
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.blue, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -4408,14 +4465,14 @@ class ManageFeesScreen extends StatelessWidget {
                             ),
                           );
                         },
-                        child: Text('View Fees'),
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.blue,
+                          backgroundColor: Colors.blue,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30)),
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 10),
                         ),
+                        child: Text('View Fees'),
                       ),
                     ),
                   );
@@ -4534,8 +4591,7 @@ class _StudentFeeDetailsScreenState extends State<StudentFeeDetailsScreen> {
 class AssignmentsOverviewScreen extends StatefulWidget {
   final String campus;
 
-  const AssignmentsOverviewScreen({Key? key, required this.campus})
-      : super(key: key);
+  const AssignmentsOverviewScreen({super.key, required this.campus});
 
   @override
   _AssignmentsOverviewScreenState createState() =>
@@ -4543,86 +4599,66 @@ class AssignmentsOverviewScreen extends StatefulWidget {
 }
 
 class _AssignmentsOverviewScreenState extends State<AssignmentsOverviewScreen> {
-  List<Student> students = [];
   List<Assignment> assignments = [];
-  Student? selectedStudent;
   bool isLoading = true;
+  String errorMessage = '';
 
   @override
   void initState() {
     super.initState();
-    fetchStudents();
+    fetchAssignments();
   }
 
-  Future<void> fetchStudents() async {
+  Future<void> fetchAssignments() async {
     setState(() {
       isLoading = true;
-    });
-    try {
-      final response = await http.get(
-        Uri.parse('http://school.superteclabs.com/get_students_api.php'),
-      );
-
-      print('API Response: ${response.body}'); // Add this line
-
-      if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        print('Decoded Data: $data'); // Add this line
-        setState(() {
-          students = data.map((student) => Student.fromJson(student)).toList();
-          isLoading = false;
-        });
-        print('Students List: $students'); // Add this line
-      } else {
-        throw Exception('Failed to load students');
-      }
-    } catch (e) {
-      print('Error fetching students: $e');
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  Future<void> fetchAssignments(String studentId) async {
-    setState(() {
-      isLoading = true;
+      errorMessage = '';
     });
     try {
       final response = await http.get(
         Uri.parse(
-            'http://school.superteclabs.com/get_student_assignments_api.php?student_id=$studentId'),
+            'http://school.superteclabs.com/get_student_assignments_api.php?campus=${widget.campus}'),
       );
 
-      print('Assignments API Response: ${response.body}'); // Add this line
+      print('API Response Status Code: ${response.statusCode}');
+      print('API Response Body: ${response.body}');
 
       if (response.statusCode == 200) {
-        final List<dynamic> data = json.decode(response.body);
-        print('Decoded Assignments Data: $data'); // Add this line
-        setState(() {
-          assignments = data
-              .map((assignment) => Assignment.fromJson(assignment))
-              .toList();
-          isLoading = false;
-        });
-        print('Assignments List: $assignments'); // Add this line
+        final data = json.decode(response.body);
+        if (data['success'] == true) {
+          setState(() {
+            assignments = (data['assignments'] as List)
+                .map((assignment) => Assignment.fromJson(assignment))
+                .toList();
+            isLoading = false;
+          });
+        } else {
+          throw Exception(data['error'] ?? 'Unknown error occurred');
+        }
+      } else if (response.statusCode == 401) {
+        throw Exception(
+            'Access denied. Please check if you have the right permissions.');
       } else {
-        throw Exception('Failed to load assignments');
+        throw Exception(
+            'Failed to load assignments. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching assignments: $e');
       setState(() {
         isLoading = false;
+        errorMessage = 'Error: $e';
       });
+      print('Error fetching assignments: $e');
     }
   }
 
-  Future<void> updateAssignment(String assignmentId, String remarks) async {
+  Future<void> updateAssignment(
+      String assignmentId, String status, String remarks) async {
     try {
       final response = await http.post(
         Uri.parse('http://school.superteclabs.com/update_assignment_api.php'),
         body: {
           'assignment_id': assignmentId,
+          'status': status,
           'remarks': remarks,
         },
       );
@@ -4631,105 +4667,146 @@ class _AssignmentsOverviewScreenState extends State<AssignmentsOverviewScreen> {
         final data = json.decode(response.body);
         if (data['success'] == true) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Assignment updated successfully')),
+            const SnackBar(content: Text('Assignment updated successfully')),
           );
-          fetchAssignments(selectedStudent!.id);
+          await fetchAssignments(); // Refresh the assignments list
         } else {
-          throw Exception(data['error']);
+          throw Exception(data['error'] ?? 'Failed to update assignment');
         }
       } else {
-        throw Exception('Failed to update assignment');
+        throw Exception(
+            'Failed to update assignment. Status code: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error updating assignment: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to update assignment')),
+        SnackBar(content: Text('Error updating assignment: $e')),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    print(
-        'Building UI. IsLoading: $isLoading, Students: ${students.length}, Assignments: ${assignments.length}');
     return Scaffold(
       appBar: AppBar(
-        title: Text('Assignments Overview'),
+        title: const Text('Assignments Overview'),
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                Text('Campus: ${widget.campus}',
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                SizedBox(height: 20),
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: students.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(students[index].name),
-                        subtitle: Text(students[index].rollNo),
-                        onTap: () {
-                          setState(() {
-                            selectedStudent = students[index];
-                          });
-                          fetchAssignments(students[index].id);
-                        },
-                      );
-                    },
-                  ),
-                ),
-                if (selectedStudent != null) ...[
-                  Text('Assignments for ${selectedStudent!.name}',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: assignments.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(assignments[index].name),
-                          subtitle: Text('Date: ${assignments[index].date}'),
-                          trailing: IconButton(
-                            icon: Icon(Icons.edit),
-                            onPressed: () {
-                              _showUpdateDialog(assignments[index]);
-                            },
-                          ),
-                        );
-                      },
+          ? const Center(child: CircularProgressIndicator())
+          : errorMessage.isNotEmpty
+              ? Center(
+                  child: Text(errorMessage,
+                      style: const TextStyle(color: Colors.red)))
+              : Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        'Campus: ${widget.campus}',
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
-                ],
-              ],
+                    Expanded(
+                      child: assignments.isEmpty
+                          ? const Center(child: Text('No assignments found'))
+                          : ListView.builder(
+                              itemCount: assignments.length,
+                              itemBuilder: (context, index) {
+                                return AssignmentCard(
+                                  assignment: assignments[index],
+                                  onUpdate: (status, remarks) =>
+                                      updateAssignment(assignments[index].id,
+                                          status, remarks),
+                                );
+                              },
+                            ),
+                    ),
+                  ],
+                ),
+    );
+  }
+}
+
+class AssignmentCard extends StatelessWidget {
+  final Assignment assignment;
+  final Function(String, String) onUpdate;
+
+  const AssignmentCard(
+      {super.key, required this.assignment, required this.onUpdate});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: ExpansionTile(
+        title: Text(assignment.name,
+            style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(
+            'Student: ${assignment.studentName} | Date: ${assignment.date}'),
+        children: [
+          ListTile(
+            title: Text('Status: ${assignment.status}'),
+            subtitle: Text('Remarks: ${assignment.remarks}'),
+            trailing: ElevatedButton(
+              child: const Text('Update'),
+              onPressed: () => _showUpdateDialog(context),
             ),
+          ),
+          if (assignment.link.isNotEmpty)
+            ListTile(
+              title: const Text('Assignment Link'),
+              trailing: IconButton(
+                icon: const Icon(Icons.link),
+                onPressed: () => _launchURL(assignment.link),
+              ),
+            ),
+        ],
+      ),
     );
   }
 
-  void _showUpdateDialog(Assignment assignment) {
+  void _showUpdateDialog(BuildContext context) {
+    String status = assignment.status;
     String remarks = assignment.remarks;
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Update Assignment'),
-          content: TextField(
-            decoration: InputDecoration(labelText: 'Remarks'),
-            onChanged: (value) {
-              remarks = value;
-            },
+          title: const Text('Update Assignment'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DropdownButton<String>(
+                value: status,
+                items: ['Submitted', 'Checked', 'Rejected'].map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    status = newValue;
+                  }
+                },
+              ),
+              TextField(
+                decoration: const InputDecoration(labelText: 'Remarks'),
+                onChanged: (value) {
+                  remarks = value;
+                },
+              ),
+            ],
           ),
           actions: [
             TextButton(
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
               onPressed: () => Navigator.pop(context),
             ),
             TextButton(
-              child: Text('Update'),
+              child: const Text('Update'),
               onPressed: () {
-                updateAssignment(assignment.id, remarks);
+                onUpdate(status, remarks);
                 Navigator.pop(context);
               },
             ),
@@ -4738,45 +4815,694 @@ class _AssignmentsOverviewScreenState extends State<AssignmentsOverviewScreen> {
       },
     );
   }
-}
 
-class StudentModel {
-  final String id;
-  final String name;
-  final String rollNo;
-
-  StudentModel({required this.id, required this.name, required this.rollNo});
-
-  factory StudentModel.fromJson(Map<String, dynamic> json) {
-    return StudentModel(
-      id: json['id'],
-      name: json['name'],
-      rollNo: json['roll_no'],
-    );
+  void _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }
 
 class Assignment {
   final String id;
   final String name;
+  final String studentName;
   final String date;
   final String link;
+  final String status;
   final String remarks;
 
-  Assignment(
-      {required this.id,
-      required this.name,
-      required this.date,
-      required this.link,
-      required this.remarks});
+  Assignment({
+    required this.id,
+    required this.name,
+    required this.studentName,
+    required this.date,
+    required this.link,
+    required this.status,
+    required this.remarks,
+  });
 
   factory Assignment.fromJson(Map<String, dynamic> json) {
     return Assignment(
-      id: json['id'],
-      name: json['assignment_name'],
-      date: json['date'],
-      link: json['link'],
-      remarks: json['remarks'],
+      id: json['id'] ?? '',
+      name: json['assignment_name'] ?? '',
+      studentName: json['student_name'] ?? '',
+      date: json['date'] ?? '',
+      link: json['link'] ?? '',
+      status: json['status'] ?? '',
+      remarks: json['remarks'] ?? '',
+    );
+  }
+}
+
+class VicePrincipalDashboard extends StatefulWidget {
+  final String vicePrincipalId;
+  final String campus;
+
+  const VicePrincipalDashboard({
+    super.key,
+    required this.vicePrincipalId,
+    required this.campus,
+  });
+
+  @override
+  _VicePrincipalDashboardState createState() => _VicePrincipalDashboardState();
+}
+
+class _VicePrincipalDashboardState extends State<VicePrincipalDashboard> {
+  Map<String, dynamic> dashboardData = {};
+  List<Student> allStudents = [];
+  List<Student> displayedStudents = [];
+  bool isLoading = true;
+  String errorMessage = '';
+  int _selectedIndex = 0;
+  String vicePrincipalName = '';
+  String campusName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDashboardData();
+  }
+
+  void refreshDashboard() {
+    fetchDashboardData();
+  }
+
+  Future<void> fetchDashboardData() async {
+    setState(() {
+      isLoading = true;
+      errorMessage = '';
+    });
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+            'http://school.superteclabs.com/vice_principal_students_api.php?id=${widget.vicePrincipalId}'),
+      );
+
+      if (response.statusCode == 200) {
+        final decodedData = json.decode(response.body) as Map<String, dynamic>;
+
+        if (decodedData.containsKey('vice_principal') &&
+            decodedData.containsKey('students')) {
+          setState(() {
+            dashboardData = decodedData;
+            vicePrincipalName = decodedData['vice_principal']['name'];
+            campusName = decodedData['vice_principal']['campus'];
+            allStudents = (decodedData['students'] as List)
+                .map((data) => Student(
+                      id: data['id'].toString(),
+                      name: data['name'] ?? 'N/A',
+                      rollNo: data['roll_no'] ?? 'N/A',
+                      campus: data['campus'] ?? 'N/A',
+                      profilePicture: data['picture_path'] ?? '',
+                    ))
+                .toList();
+            displayedStudents = List.from(allStudents);
+            isLoading = false;
+          });
+        } else {
+          throw Exception('Unexpected data format: ${response.body}');
+        }
+      } else {
+        throw Exception(
+            'Failed to load dashboard data: ${response.statusCode}');
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage = 'Failed to load dashboard data: $e';
+        isLoading = false;
+      });
+    }
+  }
+
+  void filterStudents(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        displayedStudents = List.from(allStudents);
+      } else {
+        displayedStudents = allStudents
+            .where((student) =>
+                student.name.toLowerCase().contains(query.toLowerCase()) ||
+                student.rollNo.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+      }
+    });
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    switch (index) {
+      case 0:
+        // Home - do nothing, already on home screen
+        break;
+      case 1:
+        // View Students
+        _showStudentsList();
+        break;
+      case 2:
+        // Log out
+        _showLogoutDialog();
+        break;
+    }
+  }
+
+  void _showLogoutDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Logout"),
+          content: const Text("Are you sure you want to logout?"),
+          actions: [
+            TextButton(
+              child: const Text("Cancel"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              child: const Text("Logout"),
+              onPressed: () async {
+                // Clear SharedPreferences
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.clear();
+
+                // Navigate to LoginScreen
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  (Route<dynamic> route) => false,
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.grey[100],
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text('Vice Principal Dashboard',
+            style: GoogleFonts.poppins(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            )),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_none, color: Colors.black),
+            onPressed: () {
+              // Handle notifications
+            },
+          ),
+        ],
+      ),
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : errorMessage.isNotEmpty
+              ? Center(child: Text(errorMessage))
+              : RefreshIndicator(
+                  onRefresh: fetchDashboardData,
+                  child: SingleChildScrollView(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    child: Column(
+                      children: [
+                        _buildVicePrincipalInfo(),
+                        _buildDashboardCards(),
+                      ],
+                    ),
+                  ),
+                ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            label: 'Students',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.exit_to_app),
+            label: 'Logout',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+
+  Widget _buildVicePrincipalInfo() {
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 5,
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: _updateProfilePicture,
+            child: Stack(
+              alignment: Alignment.bottomRight,
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: dashboardData['vice_principal']
+                              ?['picture_path'] !=
+                          null
+                      ? NetworkImage(
+                          'http://school.superteclabs.com/${dashboardData['vice_principal']['picture_path']}')
+                      : const AssetImage('assets/default_profile.png')
+                          as ImageProvider,
+                ),
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: const BoxDecoration(
+                    color: Colors.blue,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.camera_alt,
+                      color: Colors.white, size: 20),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            vicePrincipalName,
+            style: GoogleFonts.poppins(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            campusName,
+            style: GoogleFonts.poppins(
+              fontSize: 16,
+              color: Colors.grey[600],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _updateProfilePicture() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      try {
+        var request = http.MultipartRequest(
+          'POST',
+          Uri.parse(
+              'http://school.superteclabs.com/update_profile_picture_api.php'),
+        );
+
+        request.fields['user_id'] = widget.vicePrincipalId;
+        request.fields['user_type'] = 'vice_principal';
+
+        var pic =
+            await http.MultipartFile.fromPath('profile_picture', image.path);
+        request.files.add(pic);
+
+        var response = await request.send();
+
+        if (response.statusCode == 200) {
+          String responseBody = await response.stream.bytesToString();
+          var jsonResponse = json.decode(responseBody);
+          if (jsonResponse['status'] == 'success') {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text('Profile picture updated successfully')),
+            );
+            fetchDashboardData(); // Refresh data to show new picture
+          } else {
+            throw Exception(
+                jsonResponse['message'] ?? 'Unknown error occurred');
+          }
+        } else {
+          throw Exception('Failed to upload profile picture');
+        }
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update profile picture: $e')),
+        );
+      }
+    }
+  }
+
+  Widget _buildDashboardCards() {
+    return GridView.count(
+      crossAxisCount: 2,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(16),
+      mainAxisSpacing: 16,
+      crossAxisSpacing: 16,
+      children: [
+        _buildDashboardItem(
+            Icons.people, 'All Students', allStudents.length.toString(),
+            onTap: _showStudentsList),
+        _buildDashboardItem(Icons.date_range, 'Attendance', 'View', onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ViewAttendanceScreen(
+                students: allStudents,
+                campus: widget.campus,
+              ),
+            ),
+          );
+        }),
+        _buildDashboardItem(Icons.person, 'All Teachers',
+            dashboardData['total_teachers']?.toString() ?? '0', onTap: () {
+          // Navigate to AllTeachersScreen when implemented
+        }),
+        _buildDashboardItem(Icons.assignment, 'Assignments', 'View', onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  AssignmentsOverviewScreen(campus: widget.campus),
+            ),
+          );
+        }),
+      ],
+    );
+  }
+
+  Widget _buildDashboardItem(IconData icon, String title, String value,
+      {required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.1),
+              spreadRadius: 5,
+              blurRadius: 10,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 48, color: Colors.blue),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: GoogleFonts.poppins(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              value,
+              style: GoogleFonts.poppins(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showStudentsList() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+      ),
+      builder: (BuildContext context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.9,
+          minChildSize: 0.5,
+          maxChildSize: 0.95,
+          builder: (_, controller) {
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: const BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(25.0)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16),
+                          child: Text(
+                            'Students List',
+                            style: GoogleFonts.poppins(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close, color: Colors.white),
+                          onPressed: () => Navigator.pop(context),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: TextField(
+                      onChanged: filterStudents,
+                      decoration: InputDecoration(
+                        hintText: 'Search students',
+                        prefixIcon:
+                            const Icon(Icons.search, color: Colors.blue),
+                        filled: true,
+                        fillColor: Colors.grey[200],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      controller: controller,
+                      itemCount: displayedStudents.length,
+                      itemBuilder: (context, index) {
+                        final student = displayedStudents[index];
+                        return Card(
+                          elevation: 2,
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: student.profilePicture.isNotEmpty
+                                  ? NetworkImage(
+                                      'http://school.superteclabs.com/${student.profilePicture}')
+                                  : const AssetImage(
+                                          'assets/default_profile.png')
+                                      as ImageProvider,
+                            ),
+                            title: Text(
+                              student.name,
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(
+                              'Roll No: ${student.rollNo}',
+                              style: GoogleFonts.poppins(),
+                            ),
+                            trailing: IconButton(
+                              icon: const Icon(Icons.arrow_forward_ios,
+                                  color: Colors.blue),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => StudentDetailsScreen(
+                                      studentId: student.id,
+                                      isPrincipal: false,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+class StudentDetailsPage extends StatelessWidget {
+  final Student student;
+
+  const StudentDetailsPage({super.key, required this.student});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Student Details'),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: student.profilePicture.isNotEmpty
+                    ? NetworkImage(
+                        'http://school.superteclabs.com/${student.profilePicture}')
+                    : const AssetImage('assets/default_profile.png')
+                        as ImageProvider,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text('Name: ${student.name}',
+                style:
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Text('Roll No: ${student.rollNo}',
+                style: const TextStyle(fontSize: 16)),
+            const SizedBox(height: 8),
+            Text('Campus: ${student.campus}',
+                style: const TextStyle(fontSize: 16)),
+            // Add more student details here
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ViewAttendanceScreen extends StatefulWidget {
+  final List<Student> students;
+  final String campus;
+
+  const ViewAttendanceScreen({
+    super.key,
+    required this.students,
+    required this.campus,
+  });
+
+  @override
+  _ViewAttendanceScreenState createState() => _ViewAttendanceScreenState();
+}
+
+class _ViewAttendanceScreenState extends State<ViewAttendanceScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('View Attendance'),
+      ),
+      body: ListView.builder(
+        itemCount: widget.students.length,
+        itemBuilder: (context, index) {
+          final student = widget.students[index];
+          return ListTile(
+            title: Text(student.name),
+            subtitle: Text('Roll No: ${student.rollNo}'),
+            trailing: IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () {
+                // Implement attendance editing functionality
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class TeacherDashboard extends StatefulWidget {
+  final String teacherId;
+  final String campus;
+
+  const TeacherDashboard({
+    super.key,
+    required this.teacherId,
+    required this.campus,
+  });
+
+  @override
+  _TeacherDashboardState createState() => _TeacherDashboardState();
+}
+
+class _TeacherDashboardState extends State<TeacherDashboard> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Teacher Dashboard'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Welcome, Teacher!'),
+            Text('Teacher ID: ${widget.teacherId}'),
+            Text('Campus: ${widget.campus}'),
+          ],
+        ),
+      ),
     );
   }
 }
